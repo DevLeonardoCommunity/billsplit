@@ -21,6 +21,7 @@ export type MemberDataStore = {
   }[];
   add: QRL<() => void>;
   remove: QRL<(index: number) => void>;
+  clear: QRL<() => void>;
 };
 
 const initialStore: () => MemberDataStore = () => ({
@@ -37,22 +38,31 @@ const initialStore: () => MemberDataStore = () => ({
   remove: $(function (this: MemberDataStore, index: number) {
     this.items = this.items.filter((_, i) => i !== index);
   }),
+  clear: $(function (this: MemberDataStore) {
+    this.items = [];
+  }),
 });
 
+type BillStore = {
+  members: MemberDataStore[];
+  clearAll: QRL<() => void>;
+};
+
 export default component$(() => {
-  const store = useStore<MemberDataStore[]>([
-    initialStore(),
-    initialStore(),
-    initialStore(),
-  ]);
+  const store = useStore<BillStore>({
+    members: [initialStore(), initialStore(), initialStore()],
+    clearAll: $(function (this: BillStore) {
+      this.members.forEach((member) => member.clear());
+    }),
+  });
   const isDirty = useSignal(true);
 
   const grandTotal = useComputed$(() =>
-    sum(store.map(({ items }) => sum(items.map(({ price }) => price))))
+    sum(store.members.map(({ items }) => sum(items.map(({ price }) => price))))
   );
 
   const split = useComputed$(
-    () => Math.round((grandTotal.value / store.length) * 100) / 100
+    () => Math.round((grandTotal.value / store.members.length) * 100) / 100
   );
 
   useTask$(({ track }) => {
@@ -65,23 +75,36 @@ export default component$(() => {
   return (
     <div class="flex flex-col md:flex-row gap-8">
       <div class="flex flex-col gap-4 flex-1 items-center">
-        <MemberData store={store[0]} number={1} />
-        <MemberData store={store[1]} number={2} />
-        <MemberData store={store[2]} number={3} />
+        <MemberData store={store.members[0]} number={1} />
+        <MemberData store={store.members[1]} number={2} />
+        <MemberData store={store.members[2]} number={3} />
       </div>
       <div class="flex-1 text-center ">
         <p class="mb-4">Grand total: {grandTotal}</p>
         <p class="mb-4">Split: {split}</p>
-        <Button
-          onClick$={async () => {
-            isDirty.value = false;
-            transactions.value = await computeSplit(store);
-          }}
-          customClass={"w-[90%]"}
-          size={"big"}
-        >
-          Split your bills!
-        </Button>
+        <div class="flex justify-center items-center gap-2">
+          <Button
+            onClick$={async () => {
+              isDirty.value = false;
+              transactions.value = await computeSplit(store.members);
+            }}
+            size={"big"}
+          >
+            Split your bills!
+          </Button>
+          <div>
+            <Button
+              variant="danger"
+              onClick$={() => {
+                store.clearAll();
+                isDirty.value = false;
+                transactions.value = undefined;
+              }}
+            >
+              Reset
+            </Button>
+          </div>
+        </div>
         {transactions.value && (
           <div class="mt-4">
             {isDirty.value && <p class="mb-2">You have unsaved changes!</p>}
