@@ -11,7 +11,7 @@ export type Transaction = {
 export const computeSplit = $(
   (members: Pick<MemberDataStore, "name" | "items">[]): Transaction[] => {
     const totals = members.map(({ items }) =>
-      sum(items.map(({ price }) => price))
+      sum(items.map(({ price }) => price)),
     );
     const average =
       totals.reduce((acc, total) => acc + total, 0) / totals.length;
@@ -31,7 +31,7 @@ export const computeSplit = $(
         }
         return acc;
       },
-      { positives: [] as Owed[], negatives: [] as Owed[] }
+      { positives: [] as Owed[], negatives: [] as Owed[] },
     );
 
     const transactions: Transaction[] = [];
@@ -50,5 +50,5 @@ export const computeSplit = $(
     }
 
     return transactions;
-  }
+  },
 );

@@ -16,5 +16,6 @@ jobs:
         with:
           node-version: 18.17
       - run: npm ci
+      - run: npm i @rollup/rollup-linux-x64-gnu --include=optional sharp
       - name: Run tests
         run: npm run test
