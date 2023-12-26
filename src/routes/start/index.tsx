@@ -9,8 +9,8 @@ import {
 import type { DocumentHead } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
-import type { Transaction } from "~/hooks/useBillSplitter";
-import { useBillSplitter } from "~/hooks/useBillSplitter";
+import type { Transaction } from "~/utils/split";
+import { computeSplit } from "~/utils/split";
 
 export type MemberDataStore = {
   name: string;
@@ -45,7 +45,6 @@ const initialStore: () => MemberDataStore = () => ({
 });
 
 export default component$(() => {
-  const { compute } = useBillSplitter();
   const store = useStore<MemberDataStore[]>([
     initialStore(),
     initialStore(),
@@ -71,7 +70,7 @@ export default component$(() => {
         <p>Grand total: {grandTotal}</p>
         <Button
           onClick$={async () => {
-            split.value = await compute(store);
+            split.value = await computeSplit(store);
           }}
         >
           Split
