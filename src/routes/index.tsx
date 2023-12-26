@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { useNavigate, type DocumentHead } from "@builder.io/qwik-city";
+import { useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 
 export default component$(() => {
@@ -9,7 +9,7 @@ export default component$(() => {
     <>
       <main>
         <div class="flex flex-col gap-10 items-center">
-          <p>Lorem ipsum dolor sit amet</p>
+          <h2 class="text-3xl">Split your travel expenses easily</h2>
           <div>
             <Button size={"big"} onClick$={() => nav("/start")}>
               Start!
@@ -20,13 +20,3 @@ export default component$(() => {
     </>
   );
 });
-
-export const head: DocumentHead = {
-  title: "Welcome to Qwik",
-  meta: [
-    {
-      name: "description",
-      content: "Qwik site description",
-    },
-  ],
-};

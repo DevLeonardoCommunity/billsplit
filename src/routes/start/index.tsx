@@ -1,17 +1,16 @@
-import type { QRL } from "@builder.io/qwik";
 import {
   $,
   component$,
   useComputed$,
   useSignal,
   useStore,
+  type QRL,
+  useTask$,
 } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
 import { sum } from "~/utils/math";
-import type { Transaction } from "~/utils/split";
-import { computeSplit } from "~/utils/split";
+import { computeSplit, type Transaction } from "~/utils/split";
 
 export type MemberDataStore = {
   name?: string;
@@ -46,51 +45,59 @@ export default component$(() => {
     initialStore(),
     initialStore(),
   ]);
+  const isDirty = useSignal(true);
 
   const grandTotal = useComputed$(() =>
     sum(store.map(({ items }) => sum(items.map(({ price }) => price))))
   );
 
-  const split = useSignal<Transaction[] | undefined>(undefined);
+  const split = useComputed$(
+    () => Math.round((grandTotal.value / store.length) * 100) / 100
+  );
+
+  useTask$(({ track }) => {
+    track(grandTotal);
+    isDirty.value = true;
+  });
+
+  const transactions = useSignal<Transaction[] | undefined>(undefined);
 
   return (
-    <div class="flex flex-row">
-      <div class="flex flex-col gap-4 flex-1">
+    <div class="flex flex-col md:flex-row gap-8">
+      <div class="flex flex-col gap-4 flex-1 items-center">
         <MemberData store={store[0]} number={1} />
         <MemberData store={store[1]} number={2} />
         <MemberData store={store[2]} number={3} />
       </div>
-      <div class="flex-1">
-        <p>Grand total: {grandTotal}</p>
+      <div class="flex-1 text-center ">
+        <p class="mb-4">Grand total: {grandTotal}</p>
+        <p class="mb-4">Split: {split}</p>
         <Button
           onClick$={async () => {
-            split.value = await computeSplit(store);
+            isDirty.value = false;
+            transactions.value = await computeSplit(store);
           }}
+          customClass={"w-[90%]"}
+          size={"big"}
         >
-          Split
+          Split your bills!
         </Button>
-        {split.value && (
-          <div>
-            {split.value.map((transaction, i) => {
-              return (
-                <div key={i}>
-                  {transaction.from} owes {transaction.to} {transaction.amount}
-                </div>
-              );
-            })}
+        {transactions.value && (
+          <div class="mt-4">
+            {isDirty.value && <p class="mb-2">You have unsaved changes!</p>}
+            {transactions.value.length > 0
+              ? transactions.value.map((transaction, i) => {
+                  return (
+                    <div key={i}>
+                      {transaction.from} owes {transaction.to}{" "}
+                      {transaction.amount}
+                    </div>
+                  );
+                })
+              : "You're all even!"}
           </div>
         )}
       </div>
     </div>
   );
 });
-
-export const head: DocumentHead = {
-  title: "Welcome to Qwik",
-  meta: [
-    {
-      name: "description",
-      content: "Qwik site description",
-    },
-  ],
-};
