@@ -9,34 +9,30 @@ import {
 import type { DocumentHead } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
+import { sum } from "~/utils/math";
 import type { Transaction } from "~/utils/split";
 import { computeSplit } from "~/utils/split";
 
 export type MemberDataStore = {
-  name: string;
+  name?: string;
   items: {
     id: string;
-    name: string;
-    price: number;
+    name?: string;
+    price?: number;
   }[];
   add: QRL<() => void>;
   remove: QRL<(index: number) => void>;
 };
 
 const initialStore: () => MemberDataStore = () => ({
-  name: "",
   items: [
     {
       id: Math.random().toString(36).slice(2),
-      name: "",
-      price: 0,
     },
   ],
   add: $(function (this: MemberDataStore) {
     this.items = this.items.concat({
       id: Math.random().toString(36).slice(2),
-      name: "",
-      price: 0,
     });
   }),
   remove: $(function (this: MemberDataStore, index: number) {
@@ -52,9 +48,7 @@ export default component$(() => {
   ]);
 
   const grandTotal = useComputed$(() =>
-    store.reduce((acc, store) => {
-      return acc + store.items.reduce((acc, item) => acc + item.price, 0);
-    }, 0)
+    sum(store.map(({ items }) => sum(items.map(({ price }) => price))))
   );
 
   const split = useSignal<Transaction[] | undefined>(undefined);
@@ -62,9 +56,9 @@ export default component$(() => {
   return (
     <div class="flex flex-row">
       <div class="flex flex-col gap-4 flex-1">
-        <MemberData store={store[0]} />
-        <MemberData store={store[1]} />
-        <MemberData store={store[2]} />
+        <MemberData store={store[0]} number={1} />
+        <MemberData store={store[1]} number={2} />
+        <MemberData store={store[2]} number={3} />
       </div>
       <div class="flex-1">
         <p>Grand total: {grandTotal}</p>
