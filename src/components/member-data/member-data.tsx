@@ -6,7 +6,7 @@ import { sum } from "~/utils/math";
 export default component$(
   ({ store, number }: { store: MemberDataStore; number: number }) => {
     const total = useComputed$(() =>
-      sum(store.items.map(({ price }) => price))
+      sum(store.items.map(({ price }) => price)),
     );
 
     return (
@@ -55,5 +55,5 @@ export default component$(
         </div>
       </div>
     );
-  }
+  },
 );

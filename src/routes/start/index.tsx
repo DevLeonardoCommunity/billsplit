@@ -58,11 +58,11 @@ export default component$(() => {
   const isDirty = useSignal(true);
 
   const grandTotal = useComputed$(() =>
-    sum(store.members.map(({ items }) => sum(items.map(({ price }) => price))))
+    sum(store.members.map(({ items }) => sum(items.map(({ price }) => price)))),
   );
 
   const split = useComputed$(
-    () => Math.round((grandTotal.value / store.members.length) * 100) / 100
+    () => Math.round((grandTotal.value / store.members.length) * 100) / 100,
   );
 
   useTask$(({ track }) => {

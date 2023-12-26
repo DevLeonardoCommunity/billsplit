@@ -1,0 +1,21 @@
+name: Test runner
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.17
+      - run: npm ci
+      - run: npm i @rollup/rollup-linux-x64-gnu --include=optional sharp
+      - name: Run tests
+        run: npm run test
