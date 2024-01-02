@@ -5,8 +5,8 @@ export default component$(() => {
   const nav = useNavigate();
 
   return (
-    <header class="w-full p-10 flex justify-between">
-      <div class="cursor-pointer text-4xl" onClick$={() => nav("/")}>
+    <header class="w-full px-8 py-3 flex justify-between bg-blue-300 sticky top-0 sticky:bg-red-50">
+      <div class="cursor-pointer text-3xl" onClick$={() => nav("/")}>
         BillSplit
       </div>
     </header>
