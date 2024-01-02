@@ -42,12 +42,14 @@ const initialStore: () => MemberDataStore = () => ({
 });
 
 type BillStore = {
+  name: string;
   members: MemberDataStore[];
   clearAll: QRL<() => void>;
 };
 
 export default component$(() => {
   const store = useStore<BillStore>({
+    name: "Untitled Bill",
     members: [initialStore(), initialStore(), initialStore()],
     clearAll: $(function (this: BillStore) {
       this.members.forEach((member) => member.clear());
@@ -66,6 +68,7 @@ export default component$(() => {
       member.name = recent.members[i].name;
       member.items = recent.members[i].items;
     });
+    store.name = recent.name;
   });
 
   const grandTotal = useComputed$(() =>
@@ -95,47 +98,50 @@ export default component$(() => {
   });
 
   return (
-    <div class="flex flex-col md:flex-row gap-8">
-      <div class="flex flex-col gap-4 flex-1 items-center">
-        {store.members.map((member, i) => (
-          <MemberData key={i} store={member} number={i + 1} />
-        ))}
-      </div>
-      <div class="flex-1 text-center ">
-        <p class="mb-4">Grand total: {grandTotal}</p>
-        <p class="mb-4">Split: {split}</p>
-        <div class="flex justify-center items-center gap-2">
-          <Button onClick$={onSplitClick} size={"big"}>
-            Split your bills!
-          </Button>
-          <div>
-            <Button
-              variant="danger"
-              onClick$={() => {
-                store.clearAll();
-                isDirty.value = false;
-                transactions.value = undefined;
-              }}
-            >
-              Reset
-            </Button>
-          </div>
+    <div>
+      <h2 class="text-3xl mb-4 text-center">{store.name}</h2>
+      <div class="flex flex-col md:flex-row gap-8">
+        <div class="flex flex-col gap-4 flex-1 items-center">
+          {store.members.map((member, i) => (
+            <MemberData key={i} store={member} number={i + 1} />
+          ))}
         </div>
-        {transactions.value && (
-          <div class="mt-4">
-            {isDirty.value && <p class="mb-2">You have unsaved changes!</p>}
-            {transactions.value.length > 0
-              ? transactions.value.map((transaction, i) => {
-                  return (
-                    <div key={i}>
-                      {transaction.from} owes {transaction.to}{" "}
-                      {transaction.amount}
-                    </div>
-                  );
-                })
-              : "You're all even!"}
+        <div class="flex-1 text-center ">
+          <p class="mb-4">Grand total: {grandTotal}</p>
+          <p class="mb-4">Split: {split}</p>
+          <div class="flex justify-center items-center gap-2">
+            <Button onClick$={onSplitClick} size={"big"}>
+              Split your bills!
+            </Button>
+            <div>
+              <Button
+                variant="danger"
+                onClick$={() => {
+                  store.clearAll();
+                  isDirty.value = false;
+                  transactions.value = undefined;
+                }}
+              >
+                Reset
+              </Button>
+            </div>
           </div>
-        )}
+          {transactions.value && (
+            <div class="mt-4">
+              {isDirty.value && <p class="mb-2">You have unsaved changes!</p>}
+              {transactions.value.length > 0
+                ? transactions.value.map((transaction, i) => {
+                    return (
+                      <div key={i}>
+                        {transaction.from} owes {transaction.to}{" "}
+                        {transaction.amount}
+                      </div>
+                    );
+                  })
+                : "You're all even!"}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
