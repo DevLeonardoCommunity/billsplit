@@ -33,7 +33,8 @@ export default component$(() => {
                       href={`/start/${bill.id}`}
                       class="text-blue-600 hover:underline"
                     >
-                      {bill.name}
+                      {bill.name} (
+                      {new Date(bill.createdAt).toLocaleDateString()})
                     </a>
                   </li>
                 ))}

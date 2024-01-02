@@ -2,7 +2,7 @@ import { component$ } from "@builder.io/qwik";
 
 export default component$(() => {
   return (
-    <footer class="w-full p-10 text-center">
+    <footer class="w-full px-8 py-2 text-center bg-blue-50">
       Work in progress | Contribute on{" "}
       <a
         class="text-blue-600 hover:underline"

@@ -27,13 +27,13 @@ export const useServerTimeLoader = routeLoader$(() => {
 export default component$(() => {
   useStyles$(styles);
   return (
-    <>
+    <div class="flex flex-col h-full">
       <Header />
-      <main class="px-10">
+      <main class="px-8 py-4 bg-blue-50 flex-1">
         <Slot />
       </main>
       <Footer />
-    </>
+    </div>
   );
 });
 
