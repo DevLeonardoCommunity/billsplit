@@ -1,6 +1,7 @@
 export type RecentBill = {
   id: string;
   name: string;
+  createdAt: Date;
   members: Member[];
 };
 

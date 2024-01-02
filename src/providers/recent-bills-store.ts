@@ -14,13 +14,19 @@ function getRecentBillsArray(): RecentBill[] {
   return Object.values(getRecentBills());
 }
 
-function saveRecentBill(bill: RecentBill): void {
+function saveRecentBill(bill: Pick<RecentBill, "id" | "members">): void {
   const bills = getRecentBills();
-  bills[bill.id] = bill;
+  const existingBill: RecentBill = bills[bill.id];
+
+  bills[bill.id] = {
+    ...bill,
+    createdAt: existingBill?.createdAt ?? new Date(),
+    name: existingBill?.name ?? `Bill ${Object.keys(bills).length + 1}`,
+  };
   localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
 }
 
-export const recentBills = {
+export const recentBillsStore = {
   getRecentBills,
   getRecentBillsArray,
   saveRecentBill,
