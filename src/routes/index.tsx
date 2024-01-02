@@ -22,17 +22,24 @@ export default component$(() => {
             <Button size={"big"} onClick$={() => nav("/start")}>
               Start!
             </Button>
-            {recentBills.value.length > 0 && (
-              <div>
-                <h3>Recent Bills</h3>
-                {recentBills.value.map((bill) => (
-                  <div key={bill.id}>
-                    <a href={`/start/${bill.id}`}>{bill.name}</a>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
+          {recentBills.value.length > 0 && (
+            <div>
+              <h3 class="text-2xl">Recent Bills</h3>
+              <ul>
+                {recentBills.value.map((bill) => (
+                  <li key={bill.id} class="text-center mt-2">
+                    <a
+                      href={`/start/${bill.id}`}
+                      class="text-blue-600 hover:underline"
+                    >
+                      {bill.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </main>
     </>

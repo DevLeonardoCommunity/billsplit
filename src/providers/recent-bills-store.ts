@@ -6,6 +6,10 @@ type RecentBills = {
   [key: string]: RecentBill;
 };
 
+function getRecentBill(id: string): RecentBill | undefined {
+  return getRecentBills()[id];
+}
+
 function getRecentBills(): RecentBills {
   return JSON.parse(localStorage.getItem(BILLS_KEY) || "{}");
 }
@@ -27,6 +31,7 @@ function saveRecentBill(bill: Pick<RecentBill, "id" | "members">): void {
 }
 
 export const recentBillsStore = {
+  getRecentBill,
   getRecentBills,
   getRecentBillsArray,
   saveRecentBill,

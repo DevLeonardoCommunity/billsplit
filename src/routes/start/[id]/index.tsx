@@ -6,6 +6,7 @@ import {
   useStore,
   useTask$,
   type QRL,
+  useVisibleTask$,
 } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
@@ -55,6 +56,17 @@ export default component$(() => {
   const isDirty = useSignal(true);
   const transactions = useSignal<Transaction[] | undefined>(undefined);
   const { params } = useLocation();
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    const recent = recentBillsStore.getRecentBill(params.id);
+    if (!recent) return;
+
+    store.members.forEach((member, i) => {
+      member.name = recent.members[i].name;
+      member.items = recent.members[i].items;
+    });
+  });
 
   const grandTotal = useComputed$(() =>
     sum(store.members.map(({ items }) => sum(items.map(({ price }) => price)))),
