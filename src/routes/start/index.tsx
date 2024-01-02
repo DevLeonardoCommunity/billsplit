@@ -4,21 +4,16 @@ import {
   useComputed$,
   useSignal,
   useStore,
-  type QRL,
   useTask$,
+  type QRL,
 } from "@builder.io/qwik";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
+import type { Member } from "~/types";
 import { sum } from "~/utils/math";
 import { computeSplit, type Transaction } from "~/utils/split";
 
-export type MemberDataStore = {
-  name?: string;
-  items: {
-    id: string;
-    name?: string;
-    price?: number;
-  }[];
+export type MemberDataStore = Member & {
   add: QRL<() => void>;
   remove: QRL<(index: number) => void>;
   clear: QRL<() => void>;
@@ -75,9 +70,9 @@ export default component$(() => {
   return (
     <div class="flex flex-col md:flex-row gap-8">
       <div class="flex flex-col gap-4 flex-1 items-center">
-        <MemberData store={store.members[0]} number={1} />
-        <MemberData store={store.members[1]} number={2} />
-        <MemberData store={store.members[2]} number={3} />
+        {store.members.map((member, i) => (
+          <MemberData key={i} store={member} number={i + 1} />
+        ))}
       </div>
       <div class="flex-1 text-center ">
         <p class="mb-4">Grand total: {grandTotal}</p>
