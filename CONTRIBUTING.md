@@ -8,6 +8,15 @@ You can find here all the information you need. If somehting is missing please r
 
 This project is built with [Qwik](https://qwik.dev/) so all the instructions to run it locally are the same as the [Qwik documentation](https://qwik.dev/docs/getting-started.html).
 
+### Environment Variables
+
+Create a file named `.env.local` in the root directory of the project. This file should contain the following environment variables:
+
+```
+PUBLIC_SUPABASE_URL=https://mnubpkhtexuyixzyxtwx.supabase.co
+PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1udWJwa2h0ZXh1eWl4enl4dHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM5NTI5NTIsImV4cCI6MjAxOTUyODk1Mn0.LxAIFHyiEXD-6mVJkwMNxo5I9ifk1KdvlPM4rsglDyQ
+```
+
 ### Project Structure
 
 This project is using Qwik with [QwikCity](https://qwik.builder.io/qwikcity/overview/). QwikCity is just an extra set of tools on top of Qwik to make it easier to build a full site, including directory-based routing, layouts, and more.

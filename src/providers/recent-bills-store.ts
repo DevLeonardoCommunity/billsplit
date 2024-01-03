@@ -1,6 +1,10 @@
-import type { RecentBill } from "~/types";
-
 const BILLS_KEY = "recentBills";
+
+export type RecentBill = {
+  id: string;
+  name: string;
+  updatedAt: Date;
+};
 
 type RecentBills = {
   [key: string]: RecentBill;
@@ -18,14 +22,12 @@ function getRecentBillsArray(): RecentBill[] {
   return Object.values(getRecentBills());
 }
 
-function saveRecentBill(bill: Pick<RecentBill, "id" | "members">): void {
+function saveRecentBill(bill: Pick<RecentBill, "id" | "name">): void {
   const bills = getRecentBills();
-  const existingBill: RecentBill = bills[bill.id];
 
   bills[bill.id] = {
     ...bill,
-    createdAt: existingBill?.createdAt ?? new Date(),
-    name: existingBill?.name ?? `Bill ${Object.keys(bills).length + 1}`,
+    updatedAt: new Date(),
   };
   localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
 }

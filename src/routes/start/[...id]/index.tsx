@@ -5,12 +5,13 @@ import {
   useSignal,
   useStore,
   useTask$,
-  type QRL,
   useVisibleTask$,
+  type QRL,
 } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
+import { billsStore } from "~/providers/bills-store";
 import { recentBillsStore } from "~/providers/recent-bills-store";
 import type { Member } from "~/types";
 import { sum } from "~/utils/math";
@@ -23,11 +24,7 @@ export type MemberDataStore = Member & {
 };
 
 const initialStore: () => MemberDataStore = () => ({
-  items: [
-    {
-      id: Math.random().toString(36).slice(2),
-    },
-  ],
+  items: [{ id: Math.random().toString(36).slice(2) }],
   add: $(function (this: MemberDataStore) {
     this.items = this.items.concat({
       id: Math.random().toString(36).slice(2),
@@ -50,25 +47,45 @@ type BillStore = {
 export default component$(() => {
   const store = useStore<BillStore>({
     name: "Untitled Bill",
-    members: [initialStore(), initialStore(), initialStore()],
+    members: [],
     clearAll: $(function (this: BillStore) {
       this.members.forEach((member) => member.clear());
     }),
   });
+  const nav = useNavigate();
   const isDirty = useSignal(true);
   const transactions = useSignal<Transaction[] | undefined>(undefined);
   const { params } = useLocation();
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {
-    const recent = recentBillsStore.getRecentBill(params.id);
-    if (!recent) return;
+  useVisibleTask$(async () => {
+    if (!params.id) {
+      const newBillRaw = sessionStorage.getItem("NEWBILL");
+      if (newBillRaw) {
+        const newBill = JSON.parse(newBillRaw);
+        store.name = newBill.name;
+        store.members = Array.from({ length: newBill.membersCount }, () =>
+          initialStore(),
+        );
+        sessionStorage.removeItem("NEWBILL");
+      } else {
+        store.members = [initialStore(), initialStore(), initialStore()];
+      }
 
-    store.members.forEach((member, i) => {
-      member.name = recent.members[i].name;
-      member.items = recent.members[i].items;
+      return;
+    }
+
+    const savedBill = await billsStore.get(params.id);
+    if (!savedBill) return;
+
+    savedBill.members.forEach((member, i) => {
+      store.members[i] = {
+        ...initialStore(),
+        name: member.name,
+        items: member.items,
+      };
     });
-    store.name = recent.name;
+    store.name = savedBill.name;
   });
 
   const grandTotal = useComputed$(() =>
@@ -88,13 +105,23 @@ export default component$(() => {
     isDirty.value = false;
     transactions.value = await computeSplit(store.members);
 
-    recentBillsStore.saveRecentBill({
-      id: params.id,
+    const { id } = await billsStore.save({
+      id: params.id || undefined,
+      name: store.name,
       members: store.members.map(({ name, items }) => ({
         name,
         items,
       })),
     });
+
+    recentBillsStore.saveRecentBill({
+      id,
+      name: store.name,
+    });
+
+    if (!params.id) {
+      nav(`/start/${id}`);
+    }
   });
 
   return (
