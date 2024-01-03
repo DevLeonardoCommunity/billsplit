@@ -1,4 +1,4 @@
-export type RecentBill = {
+export type Bill = {
   id: string;
   name: string;
   createdAt: Date;

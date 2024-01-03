@@ -2,11 +2,11 @@ import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import { recentBillsStore } from "~/providers/recent-bills-store";
-import type { RecentBill } from "~/types";
+import type { Bill } from "~/types";
 
 export default component$(() => {
   const nav = useNavigate();
-  const recentBills = useSignal<RecentBill[]>([]);
+  const recentBills = useSignal<Bill[]>([]);
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {

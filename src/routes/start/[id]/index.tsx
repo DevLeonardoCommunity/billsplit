@@ -11,6 +11,7 @@ import {
 import { useLocation } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
+import { useBillStorage } from "~/hooks/useBillStorage";
 import { recentBillsStore } from "~/providers/recent-bills-store";
 import type { Member } from "~/types";
 import { sum } from "~/utils/math";
@@ -58,10 +59,23 @@ export default component$(() => {
   const isDirty = useSignal(true);
   const transactions = useSignal<Transaction[] | undefined>(undefined);
   const { params } = useLocation();
+  const { get, save } = useBillStorage();
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {
-    const recent = recentBillsStore.getRecentBill(params.id);
+  // useVisibleTask$(() => {
+  //   const recent = recentBillsStore.getRecentBill(params.id);
+  //   if (!recent) return;
+
+  //   store.members.forEach((member, i) => {
+  //     member.name = recent.members[i].name;
+  //     member.items = recent.members[i].items;
+  //   });
+  //   store.name = recent.name;
+  // });
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    const recent = await get(params.id);
     if (!recent) return;
 
     store.members.forEach((member, i) => {
@@ -90,6 +104,16 @@ export default component$(() => {
 
     recentBillsStore.saveRecentBill({
       id: params.id,
+      members: store.members.map(({ name, items }) => ({
+        name,
+        items,
+      })),
+    });
+
+    // Store to Bill
+    save({
+      id: params.id,
+      name: store.name,
       members: store.members.map(({ name, items }) => ({
         name,
         items,

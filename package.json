@@ -45,5 +45,8 @@
     "vite": "^5.0.6",
     "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^1.1.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.2"
   }
 }
