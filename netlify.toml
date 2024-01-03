@@ -1,0 +1,3 @@
+[build]
+publish = "dist"
+command = "npm i @rollup/rollup-linux-x64-gnu --include=optional sharp; npm run build"
