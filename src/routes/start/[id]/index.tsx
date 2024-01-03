@@ -5,13 +5,13 @@ import {
   useSignal,
   useStore,
   useTask$,
-  type QRL,
   useVisibleTask$,
+  type QRL,
 } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
-import { useBillStorage } from "~/hooks/useBillStorage";
+import { billsStore } from "~/providers/bills-store";
 import { recentBillsStore } from "~/providers/recent-bills-store";
 import type { Member } from "~/types";
 import { sum } from "~/utils/math";
@@ -24,11 +24,7 @@ export type MemberDataStore = Member & {
 };
 
 const initialStore: () => MemberDataStore = () => ({
-  items: [
-    {
-      id: Math.random().toString(36).slice(2),
-    },
-  ],
+  items: [],
   add: $(function (this: MemberDataStore) {
     this.items = this.items.concat({
       id: Math.random().toString(36).slice(2),
@@ -51,7 +47,7 @@ type BillStore = {
 export default component$(() => {
   const store = useStore<BillStore>({
     name: "Untitled Bill",
-    members: [initialStore(), initialStore(), initialStore()],
+    members: [],
     clearAll: $(function (this: BillStore) {
       this.members.forEach((member) => member.clear());
     }),
@@ -59,30 +55,22 @@ export default component$(() => {
   const isDirty = useSignal(true);
   const transactions = useSignal<Transaction[] | undefined>(undefined);
   const { params } = useLocation();
-  const { get, save } = useBillStorage();
-
-  // eslint-disable-next-line qwik/no-use-visible-task
-  // useVisibleTask$(() => {
-  //   const recent = recentBillsStore.getRecentBill(params.id);
-  //   if (!recent) return;
-
-  //   store.members.forEach((member, i) => {
-  //     member.name = recent.members[i].name;
-  //     member.items = recent.members[i].items;
-  //   });
-  //   store.name = recent.name;
-  // });
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
-    const recent = await get(params.id);
-    if (!recent) return;
+    if (!params.id || params.id === "new") return;
 
-    store.members.forEach((member, i) => {
-      member.name = recent.members[i].name;
-      member.items = recent.members[i].items;
+    const savedBill = await billsStore.get(params.id);
+    if (!savedBill) return;
+
+    savedBill.members.forEach((member, i) => {
+      store.members[i] = {
+        ...initialStore(),
+        name: member.name,
+        items: member.items,
+      };
     });
-    store.name = recent.name;
+    store.name = savedBill.name;
   });
 
   const grandTotal = useComputed$(() =>
@@ -102,22 +90,18 @@ export default component$(() => {
     isDirty.value = false;
     transactions.value = await computeSplit(store.members);
 
-    recentBillsStore.saveRecentBill({
-      id: params.id,
-      members: store.members.map(({ name, items }) => ({
-        name,
-        items,
-      })),
-    });
-
-    // Store to Bill
-    save({
+    await billsStore.save({
       id: params.id,
       name: store.name,
       members: store.members.map(({ name, items }) => ({
         name,
         items,
       })),
+    });
+
+    recentBillsStore.saveRecentBill({
+      id: params.id,
+      name: store.name,
     });
   });
 

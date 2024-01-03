@@ -1,12 +1,16 @@
-import type { Bill } from "~/types";
-
 const BILLS_KEY = "recentBills";
 
-type RecentBills = {
-  [key: string]: Bill;
+export type RecentBill = {
+  id: string;
+  name: string;
+  updatedAt: Date;
 };
 
-function getRecentBill(id: string): Bill | undefined {
+type RecentBills = {
+  [key: string]: RecentBill;
+};
+
+function getRecentBill(id: string): RecentBill | undefined {
   return getRecentBills()[id];
 }
 
@@ -14,18 +18,16 @@ function getRecentBills(): RecentBills {
   return JSON.parse(localStorage.getItem(BILLS_KEY) || "{}");
 }
 
-function getRecentBillsArray(): Bill[] {
+function getRecentBillsArray(): RecentBill[] {
   return Object.values(getRecentBills());
 }
 
-function saveRecentBill(bill: Pick<Bill, "id" | "members">): void {
+function saveRecentBill(bill: Pick<RecentBill, "id" | "name">): void {
   const bills = getRecentBills();
-  const existingBill: Bill = bills[bill.id];
 
   bills[bill.id] = {
     ...bill,
-    createdAt: existingBill?.createdAt ?? new Date(),
-    name: existingBill?.name ?? `Bill ${Object.keys(bills).length + 1}`,
+    updatedAt: new Date(),
   };
   localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
 }

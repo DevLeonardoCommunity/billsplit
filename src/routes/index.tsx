@@ -1,12 +1,14 @@
 import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
-import { recentBillsStore } from "~/providers/recent-bills-store";
-import type { Bill } from "~/types";
+import {
+  type RecentBill,
+  recentBillsStore,
+} from "~/providers/recent-bills-store";
 
 export default component$(() => {
   const nav = useNavigate();
-  const recentBills = useSignal<Bill[]>([]);
+  const recentBills = useSignal<RecentBill[]>([]);
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
@@ -34,7 +36,7 @@ export default component$(() => {
                       class="text-blue-600 hover:underline"
                     >
                       {bill.name} (
-                      {new Date(bill.createdAt).toLocaleDateString()})
+                      {new Date(bill.updatedAt).toLocaleDateString()})
                     </a>
                   </li>
                 ))}
