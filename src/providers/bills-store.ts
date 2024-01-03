@@ -25,18 +25,20 @@ const get = $(async (id: string) => {
   return data as SavedBill;
 });
 
-const save = $(async (bill: Omit<Bill, "createdAt">) => {
-  const { data, error } = await supabaseClient
-    .from(BILL_TABLE)
-    .upsert(bill)
-    .single();
+const save = $(
+  async (bill: Omit<Bill, "createdAt" | "id"> & Partial<Pick<Bill, "id">>) => {
+    const { data, error } = await supabaseClient
+      .from(BILL_TABLE)
+      .upsert(bill)
+      .select();
 
-  if (error) {
-    throw error;
-  }
+    if (error) {
+      throw error;
+    }
 
-  return data;
-});
+    return data[0] as SavedBill;
+  },
+);
 
 export const billsStore = {
   get,

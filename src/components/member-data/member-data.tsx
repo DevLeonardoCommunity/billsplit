@@ -1,5 +1,5 @@
 import { $, component$, useComputed$ } from "@builder.io/qwik";
-import type { MemberDataStore } from "~/routes/start/[id]";
+import type { MemberDataStore } from "~/routes/start/[...id]";
 import Button from "../button/button";
 import { sum } from "~/utils/math";
 

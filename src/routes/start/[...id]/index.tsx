@@ -8,7 +8,7 @@ import {
   useVisibleTask$,
   type QRL,
 } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import MemberData from "~/components/member-data/member-data";
 import { billsStore } from "~/providers/bills-store";
@@ -24,7 +24,7 @@ export type MemberDataStore = Member & {
 };
 
 const initialStore: () => MemberDataStore = () => ({
-  items: [],
+  items: [{ id: Math.random().toString(36).slice(2) }],
   add: $(function (this: MemberDataStore) {
     this.items = this.items.concat({
       id: Math.random().toString(36).slice(2),
@@ -52,13 +52,28 @@ export default component$(() => {
       this.members.forEach((member) => member.clear());
     }),
   });
+  const nav = useNavigate();
   const isDirty = useSignal(true);
   const transactions = useSignal<Transaction[] | undefined>(undefined);
   const { params } = useLocation();
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
-    if (!params.id || params.id === "new") return;
+    if (!params.id) {
+      const newBillRaw = sessionStorage.getItem("NEWBILL");
+      if (newBillRaw) {
+        const newBill = JSON.parse(newBillRaw);
+        store.name = newBill.name;
+        store.members = Array.from({ length: newBill.membersCount }, () =>
+          initialStore(),
+        );
+        sessionStorage.removeItem("NEWBILL");
+      } else {
+        store.members = [initialStore(), initialStore(), initialStore()];
+      }
+
+      return;
+    }
 
     const savedBill = await billsStore.get(params.id);
     if (!savedBill) return;
@@ -90,8 +105,8 @@ export default component$(() => {
     isDirty.value = false;
     transactions.value = await computeSplit(store.members);
 
-    await billsStore.save({
-      id: params.id,
+    const { id } = await billsStore.save({
+      id: params.id || undefined,
       name: store.name,
       members: store.members.map(({ name, items }) => ({
         name,
@@ -100,9 +115,13 @@ export default component$(() => {
     });
 
     recentBillsStore.saveRecentBill({
-      id: params.id,
+      id,
       name: store.name,
     });
+
+    if (!params.id) {
+      nav(`/start/${id}`);
+    }
   });
 
   return (
