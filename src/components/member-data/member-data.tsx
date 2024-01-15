@@ -17,7 +17,7 @@ export default component$(
             class="w-full shadow border-2 rounded p-1"
             placeholder={`Member ${number}`}
             value={store.name}
-            onKeyUp$={(_, el) => (store.name = el.value)}
+            onInput$={(_, el) => (store.name = el.value)}
           />
           <span class="mx-4">{store.items.length}</span>
         </div>
@@ -30,14 +30,14 @@ export default component$(
                   class="w-full shadow border-2 rounded p-1"
                   placeholder="Item name"
                   value={item.name}
-                  onKeyUp$={(_, el) => (item.name = el.value)}
+                  onInput$={(_, el) => (item.name = el.value)}
                 />
                 <input
                   type="number"
                   class="w-[5em] shadow border-2 rounded p-1"
                   placeholder="Price"
                   value={item.price}
-                  onKeyUp$={(_, el) => (item.price = Number(el.value))}
+                  onInput$={(_, el) => (item.price = Number(el.value))}
                   min={0}
                 />
                 <Button
