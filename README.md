@@ -4,6 +4,8 @@ _Split your travel expenses easily_
 
 Try it now: https://billsplit-project.vercel.app/
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/32fadf23-0798-455d-ba76-7222cf172c13/deploy-status)](https://app.netlify.com/sites/billsplit-project/deploys)
+
 ## Getting Started
 
 When going on vacation or organizing a party, it is often difficult to know who owes what to whom.
