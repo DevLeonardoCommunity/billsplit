@@ -32,9 +32,21 @@ function saveRecentBill(bill: Pick<RecentBill, "id" | "name">): void {
   localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
 }
 
+function removeRecentBill(id: string): RecentBill[]{
+  const bills = getRecentBills();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {[id]: removeBill, ...newBills} = bills;
+
+  localStorage.setItem(BILLS_KEY, JSON.stringify(newBills));
+
+  return getRecentBillsArray();
+}
+
 export const recentBillsStore = {
   getRecentBill,
   getRecentBills,
   getRecentBillsArray,
   saveRecentBill,
+  removeRecentBill,
 };
