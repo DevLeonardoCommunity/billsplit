@@ -50,7 +50,11 @@ export default component$(() => {
                       class="text-blue-600 hover:underline"
                     >
                       {bill.name} (
-                      {new Date(bill.updatedAt).toLocaleDateString()})
+                      {new Intl.DateTimeFormat(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "medium",
+                      }).format(new Date(bill.updatedAt))}
+                      )
                     </a>
                     <button
                       class="text-[#c0392b] hover:text-[#34495e] ml-2"
