@@ -1,8 +1,14 @@
 # Billsplit
 
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 _Split your travel expenses easily_
 
-Try it now: https://billsplit-project.vercel.app/
+Try it now: https://billsplit-project.netlify.app/
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/32fadf23-0798-455d-ba76-7222cf172c13/deploy-status)](https://app.netlify.com/sites/billsplit-project/deploys)
 
@@ -34,69 +40,26 @@ Want to suggest a feature? Feel free to [Open an issue](https://github.com/Balas
 
 This application is born as a playground to learn [Qwik](https://qwik.builder.io/), if you're learning it too, feel free to contribute!
 
-All intructions can be found in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+All instructions can be found in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
-## Netlify
+## Contributors ✨
 
-This starter site is configured to deploy to [Netlify Edge Functions](https://docs.netlify.com/edge-functions/overview/), which means it will be rendered at an edge location near to your users.
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-### Local development
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://leonardomontini.dev/"><img src="https://avatars.githubusercontent.com/u/7253929?v=4?s=100" width="100px;" alt="Leonardo Montini"/><br /><sub><b>Leonardo Montini</b></sub></a><br /><a href="https://github.com/DevLeonardoCommunity/billsplit/commits?author=Balastrong" title="Code">💻</a> <a href="#projectManagement-Balastrong" title="Project Management">📆</a></td>
+    </tr>
+  </tbody>
+</table>
 
-The [Netlify CLI](https://docs.netlify.com/cli/get-started/) can be used to preview a production build locally. To do so: First build your site, then to start a local server, run:
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-1. Install Netlify CLI globally `npm i -g netlify-cli`.
-2. Build your site with both ssr and static `npm run build`.
-3. Start a local server with `npm run serve`.
-   In this project, `npm run serve` uses the `netlify dev` command to spin up a server that can handle Netlify's Edge Functions locally.
-4. Visit [http://localhost:8888/](http://localhost:8888/) to check out your site.
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-### Edge Functions Declarations
-
-[Netlify Edge Functions declarations](https://docs.netlify.com/edge-functions/declarations/)
-can be configured to run on specific URL patterns. Each edge function declaration associates
-one site path pattern with one function to execute on requests that match the path. A single request can execute a chain of edge functions from a series of declarations. A single edge function can be associated with multiple paths across various declarations.
-
-This is useful to determine if a page response should be Server-Side Rendered (SSR) or
-if the response should use a static-site generated (SSG) `index.html` file instead.
-
-By default, the Netlify Edge adaptor will generate a `.netlify/edge-middleware/manifest.json` file, which is used by the Netlify deployment to determine which paths should, and should not, use edge functions.
-
-To override the generated manifest, you can [add a declaration](https://docs.netlify.com/edge-functions/declarations/#add-a-declaration) to the `netlify.toml` using the `[[edge_functions]]` config. For example:
-
-```toml
-[[edge_functions]]
-  path = "/admin"
-  function = "auth"
-```
-
-### Addition Adapter Options
-
-Netlify-specific option fields that can be passed to the adapter options:
-
-- `excludedPath` this option accepts a `string` glob pattern that represents which path pattern should not go through the generated Edge Functions.
-
-### Deployments
-
-You can [deploy your site to Netlify](https://docs.netlify.com/site-deploys/create-deploys/) either via a Git provider integration or through the Netlify CLI. This starter site includes a `netlify.toml` file to configure your build for deployment.
-
-#### Deploying via Git
-
-Once your site has been pushed to your Git provider, you can either link it [in the Netlify UI](https://app.netlify.com/start) or use the CLI. To link your site to a Git provider from the Netlify CLI, run the command:
-
-```shell
-netlify link
-```
-
-This sets up [continuous deployment](https://docs.netlify.com/site-deploys/create-deploys/#deploy-with-git) for your site's repo. Whenever you push new commits to your repo, Netlify starts the build process..
-
-#### Deploying manually via the CLI
-
-If you wish to deploy from the CLI rather than using Git, you can use the command:
-
-```shell
-netlify deploy --build
-```
-
-You must use the `--build` flag whenever you deploy. This ensures that the Edge Functions that this starter site relies on are generated and available when you deploy your site.
-
-Add `--prod` flag to deploy to production.
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
