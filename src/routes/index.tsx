@@ -1,6 +1,8 @@
 import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
+import { FaXmarkSolid } from "@qwikest/icons/font-awesome";
+
 import {
   type RecentBill,
   recentBillsStore,
@@ -42,7 +44,7 @@ export default component$(() => {
               <h3 class="text-2xl">Recent Bills</h3>
               <ul>
                 {recentBills.value.map((bill) => (
-                  <li key={bill.id} class="mt-2">
+                  <li key={bill.id} class="mt-2 flex items-center">
                     <a
                       href={`/start/${bill.id}`}
                       class="text-blue-600 hover:underline"
@@ -50,6 +52,16 @@ export default component$(() => {
                       {bill.name} (
                       {new Date(bill.updatedAt).toLocaleDateString()})
                     </a>
+                    <button
+                      class="text-[#c0392b] hover:text-[#34495e] ml-2"
+                      onClick$={() => {
+                        recentBills.value = recentBillsStore.removeRecentBill(
+                          bill.id,
+                        );
+                      }}
+                    >
+                      <FaXmarkSolid font-size={24} />
+                    </button>
                   </li>
                 ))}
               </ul>

@@ -49,6 +49,7 @@
     "vitest": "^1.1.0"
   },
   "dependencies": {
+    "@qwikest/icons": "^0.0.13",
     "@supabase/supabase-js": "^2.39.2",
     "sharp": "^0.33.2"
   },
