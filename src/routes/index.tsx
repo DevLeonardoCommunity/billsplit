@@ -55,10 +55,12 @@ export default component$(() => {
                     <button
                       class="text-[#c0392b] hover:text-[#34495e] ml-2"
                       onClick$={() => {
-                        recentBills.value = recentBillsStore.removeRecentBill(bill.id);
+                        recentBills.value = recentBillsStore.removeRecentBill(
+                          bill.id,
+                        );
                       }}
                     >
-                      <FaXmarkSolid font-size={24}/>
+                      <FaXmarkSolid font-size={24} />
                     </button>
                   </li>
                 ))}
