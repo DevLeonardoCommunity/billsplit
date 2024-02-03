@@ -1,9 +1,7 @@
 # Billsplit
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 _Split your travel expenses easily_
@@ -53,6 +51,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://leonardomontini.dev/"><img src="https://avatars.githubusercontent.com/u/7253929?v=4?s=100" width="100px;" alt="Leonardo Montini"/><br /><sub><b>Leonardo Montini</b></sub></a><br /><a href="https://github.com/DevLeonardoCommunity/billsplit/commits?author=Balastrong" title="Code">💻</a> <a href="#projectManagement-Balastrong" title="Project Management">📆</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/K1ethoang"><img src="https://avatars.githubusercontent.com/u/88199151?v=4?s=100" width="100px;" alt="Kiet Hoang Gia"/><br /><sub><b>Kiet Hoang Gia</b></sub></a><br /><a href="https://github.com/DevLeonardoCommunity/billsplit/commits?author=K1ethoang" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
