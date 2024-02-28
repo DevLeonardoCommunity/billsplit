@@ -18,14 +18,6 @@ export default component$(() => {
   });
 
   const onStart = $(() => {
-    sessionStorage.setItem(
-      "NEWBILL",
-      JSON.stringify({
-        name: "Untitled Bill",
-        membersCount: 3,
-      }),
-    );
-
     nav("/start");
   });
 

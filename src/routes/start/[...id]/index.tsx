@@ -44,9 +44,12 @@ type BillStore = {
   clearAll: QRL<() => void>;
 };
 
+const BILL_NAME_DEFAULT = "Untitled Bill";
+const MEMBER_COUNT_DEFAULT = 3;
+
 export default component$(() => {
   const store = useStore<BillStore>({
-    name: "Untitled Bill",
+    name: BILL_NAME_DEFAULT,
     members: [],
     clearAll: $(function (this: BillStore) {
       this.members.forEach((member) => member.clear());
@@ -60,17 +63,10 @@ export default component$(() => {
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
     if (!params.id) {
-      const newBillRaw = sessionStorage.getItem("NEWBILL");
-      if (newBillRaw) {
-        const newBill = JSON.parse(newBillRaw);
-        store.name = newBill.name;
-        store.members = Array.from({ length: newBill.membersCount }, () =>
-          initialStore(),
-        );
-        sessionStorage.removeItem("NEWBILL");
-      } else {
-        store.members = [initialStore(), initialStore(), initialStore()];
-      }
+      store.name = BILL_NAME_DEFAULT;
+      store.members = Array.from({ length: MEMBER_COUNT_DEFAULT }, () =>
+        initialStore(),
+      );
 
       return;
     }
