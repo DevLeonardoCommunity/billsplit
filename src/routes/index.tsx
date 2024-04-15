@@ -40,8 +40,7 @@ export default component$(() => {
               type="text"
               class="w-full shadow border-2 rounded p-1"
               placeholder="Bill name"
-              value={titleBill.value}
-              onInput$={(_, el) => (titleBill.value = el.value)}
+              bind:value={titleBill}
             />
           </div>
           <div>
