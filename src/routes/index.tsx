@@ -11,6 +11,7 @@ import {
 export default component$(() => {
   const nav = useNavigate();
   const recentBills = useSignal<RecentBill[]>([]);
+  const titleBill = useSignal<string>("");
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
@@ -21,7 +22,7 @@ export default component$(() => {
     sessionStorage.setItem(
       "NEWBILL",
       JSON.stringify({
-        name: "Untitled Bill",
+        name: titleBill.value || "Untitled Bill",
         membersCount: 3,
       }),
     );
@@ -34,6 +35,14 @@ export default component$(() => {
       <main>
         <div class="flex flex-col gap-10 items-center">
           <h2 class="text-3xl">Split your travel expenses easily</h2>
+          <div>
+            <input
+              type="text"
+              class="w-full shadow border-2 rounded p-1"
+              placeholder="Bill name"
+              bind:value={titleBill}
+            />
+          </div>
           <div>
             <Button size={"big"} onClick$={onStart}>
               Start!
