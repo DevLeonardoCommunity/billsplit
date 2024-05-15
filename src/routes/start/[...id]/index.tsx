@@ -67,8 +67,13 @@ export default component$(() => {
   useVisibleTask$(async () => {
     if (!params.id) {
       store.name = searchParams.get("billName") || BILL_NAME_DEFAULT;
-      store.members = Array.from({ length: parseInt(searchParams.get("memberCount") || MEMBER_COUNT_DEFAULT.toString()) }, () =>
-        initialStore(),
+      store.members = Array.from(
+        {
+          length: parseInt(
+            searchParams.get("memberCount") || MEMBER_COUNT_DEFAULT.toString(),
+          ),
+        },
+        () => initialStore(),
       );
 
       return;
