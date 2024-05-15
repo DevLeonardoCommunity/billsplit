@@ -41,7 +41,7 @@ export default component$(() => {
     billName: billData.billName,
     memberCount: billData.memberCount.toString()
   });
-    await nav("/start/"+searchParams.toString());
+    await nav("/start?"+searchParams.toString());
   });
 
   return (

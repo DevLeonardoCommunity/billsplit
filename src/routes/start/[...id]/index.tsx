@@ -61,7 +61,7 @@ export default component$(() => {
   const { params } = useLocation();
 
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.params);
+  const searchParams = new URLSearchParams(location.url.search);
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
