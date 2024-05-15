@@ -1,4 +1,10 @@
-import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  useSignal,
+  useStore,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import { FaXmarkSolid } from "@qwikest/icons/font-awesome";
@@ -9,45 +15,74 @@ import {
 } from "~/providers/recent-bills-store";
 
 export default component$(() => {
+  const billData = useStore({
+    billName: "",
+    memberCount: 0,
+  });
+
   const nav = useNavigate();
   const recentBills = useSignal<RecentBill[]>([]);
-  const titleBill = useSignal<string>("");
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
     recentBills.value = recentBillsStore.getRecentBillsArray();
   });
 
-  const onStart = $(() => {
-    sessionStorage.setItem(
-      "NEWBILL",
-      JSON.stringify({
-        name: titleBill.value || "Untitled Bill",
-        membersCount: 3,
-      }),
-    );
+  const onStart = $(async () => {
+    if (billData.billName.trim() === "") {
+      alert("Enter bill's name");
+      return;
+    }
+    if (billData.memberCount === 0) {
+      alert("Enter number of members");
+      return;
+    }
+    billData.billName = billData.billName.trim();
 
-    nav("/start");
+    const searchParams = new URLSearchParams({
+      billName: billData.billName,
+      memberCount: billData.memberCount.toString(),
+    });
+    await nav("/start?" + searchParams.toString());
   });
 
   return (
     <>
       <main>
-        <div class="flex flex-col gap-10 items-center">
+        <div class="flex flex-col gap-4 items-center">
           <h2 class="text-3xl">Split your travel expenses easily</h2>
-          <div>
-            <input
-              type="text"
-              class="w-full shadow border-2 rounded p-1"
-              placeholder="Bill name"
-              bind:value={titleBill}
-            />
+
+          <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+              <label for="bill-name" class="block mb-2 text-xl font-medium">
+                Bill name
+              </label>
+              <input
+                type="text"
+                id="bill-name"
+                class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter name of bill"
+                onInput$={(_, el) => (billData.billName = el.value)}
+              />
+            </div>
+            <div>
+              <label for="bill-name" class="block mb-2 text-xl font-medium">
+                Number of members
+              </label>
+              <input
+                type="number"
+                id="bill-name"
+                class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter number of members"
+                onInput$={(_, el) =>
+                  (billData.memberCount = parseInt(el.value))
+                }
+              />
+            </div>
           </div>
-          <div>
-            <Button size={"big"} onClick$={onStart}>
-              Start!
-            </Button>
-          </div>
+          <Button size={"big"} onClick$={onStart}>
+            Start!
+          </Button>
           {recentBills.value.length > 0 && (
             <div>
               <h3 class="text-2xl">Recent Bills</h3>
