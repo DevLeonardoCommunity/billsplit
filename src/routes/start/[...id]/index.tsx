@@ -60,11 +60,14 @@ export default component$(() => {
   const transactions = useSignal<Transaction[] | undefined>(undefined);
   const { params } = useLocation();
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.params);
+
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
     if (!params.id) {
-      store.name = BILL_NAME_DEFAULT;
-      store.members = Array.from({ length: MEMBER_COUNT_DEFAULT }, () =>
+      store.name = searchParams.get("billName") || BILL_NAME_DEFAULT;
+      store.members = Array.from({ length: parseInt(searchParams.get("memberCount") || MEMBER_COUNT_DEFAULT.toString()) }, () =>
         initialStore(),
       );
 
